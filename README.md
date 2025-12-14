@@ -129,6 +129,23 @@ We are proud to collaborate with the following content creators who have contrib
 - [MKT Seven Automações](https://www.youtube.com/@sevenautomacoes)
 - [Vamos automatizar](https://www.youtube.com/vamosautomatizar)
 
+## 📚 Documentation
+
+### Quick Start
+- [Quick Start Guide](docs/setup/QUICK_START.md) - Get up and running in 3 steps
+- [Docker Setup](docs/setup/DOCKER_SETUP.md) - Complete Docker setup instructions
+- [Redis Fix](docs/setup/REDIS_FIX.md) - Redis connection troubleshooting
+
+### Database & Visualization
+- [Database Visualization](docs/database/DATABASE_VISUALIZATION.md) - pgAdmin and RedisInsight setup
+
+### API Usage
+- [Frontend Alternatives](docs/api/FRONTEND_ALTERNATIVES.md) - Using the API with Postman/curl
+
+### For AI Agents
+- [AGENTS.md](docs/AGENTS.md) - Guidelines for AI development agents
+- [CLAUDE.md](docs/CLAUDE.md) - Claude AI quick reference
+
 ## License
 
 Evolution API is licensed under the Apache License 2.0, with the following additional conditions:
