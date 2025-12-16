@@ -1,9 +1,9 @@
-FROM node:24-alpine AS builder
+FROM node:24-alpine AS base
 
 RUN apk update && \
-    apk add --no-cache git ffmpeg wget curl bash openssl
+    apk add --no-cache git ffmpeg wget curl bash openssl dos2unix
 
-LABEL version="2.3.1" description="Api to control whatsapp features through http requests." 
+LABEL version="2.3.1" description="Api to control whatsapp features through http requests."
 LABEL maintainer="Davidson Gomes" git="https://github.com/DavidsonGomes"
 LABEL contact="contato@evolution-api.com"
 
@@ -15,6 +15,16 @@ COPY ./tsup.config.ts ./
 
 RUN npm ci --silent
 
+COPY ./Docker ./Docker
+RUN chmod +x ./Docker/scripts/* && dos2unix ./Docker/scripts/*
+
+# Development stage with hot reload
+FROM base AS development
+
+ENV DOCKER_ENV=true
+ENV TZ=America/Sao_Paulo
+ENV DATABASE_PROVIDER=postgresql
+
 COPY ./src ./src
 COPY ./public ./public
 COPY ./prisma ./prisma
@@ -22,9 +32,23 @@ COPY ./manager ./manager
 COPY ./.env.example ./.env
 COPY ./runWithProvider.js ./
 
-COPY ./Docker ./Docker
+RUN ./Docker/scripts/generate_database.sh
 
-RUN chmod +x ./Docker/scripts/* && dos2unix ./Docker/scripts/*
+EXPOSE 8080
+
+ENTRYPOINT ["/bin/bash", "-c", ". ./Docker/scripts/deploy_database.sh && npm run dev:server"]
+
+# Build stage for production
+FROM base AS builder
+
+ENV DATABASE_PROVIDER=postgresql
+
+COPY ./src ./src
+COPY ./public ./public
+COPY ./prisma ./prisma
+COPY ./manager ./manager
+COPY ./.env.example ./.env
+COPY ./runWithProvider.js ./
 
 RUN ./Docker/scripts/generate_database.sh
 
